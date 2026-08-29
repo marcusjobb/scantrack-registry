@@ -40,15 +40,15 @@ static string BuildDashboard(ConcurrentDictionary<string, NodeEntry> nodes)
 {
     var rows = nodes.Values
         .OrderBy(n => n.City)
-        .Select(n => $"""
+        .Select(n => $$"""
             <tr>
-              <td>{n.City}</td>
-              <td><a href="{n.Url}/status" target="_blank">{n.Url}</a></td>
-              <td>{n.RegisteredAt:HH:mm:ss} UTC</td>
+              <td>{{n.City}}</td>
+              <td><a href="{{n.Url}}/status" target="_blank">{{n.Url}}</a></td>
+              <td>{{n.RegisteredAt:HH:mm:ss}} UTC</td>
             </tr>
             """);
 
-    return $"""
+    return $$"""
         <!DOCTYPE html>
         <html lang="sv">
         <head>
@@ -56,21 +56,21 @@ static string BuildDashboard(ConcurrentDictionary<string, NodeEntry> nodes)
           <meta http-equiv="refresh" content="10">
           <title>ScanTrack Registry</title>
           <style>
-            body {{ font-family: monospace; background: #0f1117; color: #dde3ed; padding: 2rem; }}
-            h1 {{ color: #22c55e; }}
-            table {{ border-collapse: collapse; width: 100%; }}
-            th {{ text-align: left; padding: 0.5rem 1rem; background: #1e2635; color: #67e8f9; }}
-            td {{ padding: 0.5rem 1rem; border-bottom: 1px solid #1e2635; }}
-            a {{ color: #67e8f9; }}
-            .count {{ color: #f97316; font-size: 1.2rem; }}
+            body { font-family: monospace; background: #0f1117; color: #dde3ed; padding: 2rem; }
+            h1 { color: #22c55e; }
+            table { border-collapse: collapse; width: 100%; }
+            th { text-align: left; padding: 0.5rem 1rem; background: #1e2635; color: #67e8f9; }
+            td { padding: 0.5rem 1rem; border-bottom: 1px solid #1e2635; }
+            a { color: #67e8f9; }
+            .count { color: #f97316; font-size: 1.2rem; }
           </style>
         </head>
         <body>
           <h1>ScanTrack Registry</h1>
-          <p class="count">{nodes.Count} noder online · uppdateras var 10:e sekund</p>
+          <p class="count">{{nodes.Count}} noder online · uppdateras var 10:e sekund</p>
           <table>
             <tr><th>Stad</th><th>URL</th><th>Registrerad</th></tr>
-            {string.Join("\n", rows)}
+            {{string.Join("\n", rows)}}
           </table>
         </body>
         </html>
