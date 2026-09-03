@@ -168,6 +168,7 @@ static Dictionary<string, List<string>> BuildGraph()
         ("Jukkasjärvi", "Umeå"),
         ("Jukkasjärvi", "Luleå"),
         ("Jukkasjärvi", "Kiruna"),
+        ("Kiruna", "Jukkasjärvi"),
     };
 
     var g = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
