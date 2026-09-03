@@ -6,6 +6,7 @@ RUN dotnet publish ScanTrackRegistry/ScanTrackRegistry.csproj -c Release -o /app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
+COPY cities.csv .
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
 ENTRYPOINT ["dotnet", "ScanTrackRegistry.dll"]

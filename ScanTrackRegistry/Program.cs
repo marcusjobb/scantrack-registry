@@ -44,6 +44,15 @@ app.MapDelete("/nodes/{city}", (string city) =>
 
 app.MapGet("/", () => Results.Content(BuildDashboard(nodes, offline, graph), "text/html"));
 
+app.MapGet("/cities.csv", async (HttpContext ctx) =>
+{
+    var path = Path.Combine(AppContext.BaseDirectory, "cities.csv");
+    if (!File.Exists(path)) return Results.NotFound("cities.csv saknas");
+    ctx.Response.Headers["Content-Disposition"] = "attachment; filename=\"cities.csv\"";
+    var content = await File.ReadAllTextAsync(path);
+    return Results.Content(content, "text/csv; charset=utf-8");
+});
+
 app.Run();
 
 static void SaveState(
