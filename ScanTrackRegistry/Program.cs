@@ -112,6 +112,9 @@ static Dictionary<string, List<string>> BuildGraph()
         ("Varberg", "Helsingborg"),
         ("Eskilstuna", "Västerås"),
         ("Eskilstuna", "Stockholm"),
+        ("Göteborg", "Alingsås"),
+        ("Alingsås", "Borås"),
+        ("Jukkasjärvi", "Alingsås"),
         ("Göteborg", "Borås"),
         ("Göteborg", "Karlstad"),
         ("Borås", "Jönköping"),
@@ -142,6 +145,9 @@ static Dictionary<string, List<string>> BuildGraph()
         ("Örebro", "Gävle"),
         ("Örebro", "Falun"),
         ("Gävle", "Falun"),
+        ("Gävle", "Hudiksvall"),
+        ("Hudiksvall", "Sundsvall"),
+        ("Jukkasjärvi", "Hudiksvall"),
         ("Gävle", "Sundsvall"),
         ("Falun", "Östersund"),
         ("Sundsvall", "Härnösand"),
@@ -231,11 +237,15 @@ static string BuildDashboard(
         {
             var age = now - n.LastSeen;
             var ageStr = age.TotalMinutes < 2 ? "nyss" : $"{(int)age.TotalMinutes} min sedan";
+            var directNeighbors = graph.ContainsKey(n.City)
+                ? graph[n.City].Count(neighbor => onlineCities.Contains(neighbor, StringComparer.OrdinalIgnoreCase))
+                : 0;
             var reachable = CountReachable(n.City, onlineCities, graph);
             return $$"""
                 <tr>
                   <td>{{n.City}}</td>
                   <td><a href="{{n.Url}}/status" target="_blank">{{n.Url}}</a></td>
+                  <td class="center">{{directNeighbors}}</td>
                   <td class="center">{{reachable}}</td>
                   <td>{{n.LastSeen:HH:mm:ss}} UTC ({{ageStr}})</td>
                 </tr>
@@ -252,6 +262,7 @@ static string BuildDashboard(
                 <tr class="offline">
                   <td>{{o.City}}</td>
                   <td>{{o.Url}}</td>
+                  <td class="center">—</td>
                   <td class="center">—</td>
                   <td>offline sedan {{agoStr}}</td>
                 </tr>
@@ -289,7 +300,8 @@ static string BuildDashboard(
             <tr>
               <th>Stad</th>
               <th>URL</th>
-              <th class="center">Nåbara noder</th>
+              <th class="center">Direkta grannar</th>
+              <th class="center">Totalt nåbara</th>
               <th>Senast sedd</th>
             </tr>
             {{string.Join("\n", allRows)}}
